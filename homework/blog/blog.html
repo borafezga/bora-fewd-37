@@ -132,7 +132,14 @@
       function comment(event) {
         event.preventDefault();
 
-        // Your code for comments goes here
+        var newComment = document.querySelector("#new-comment-body");
+        var newCommentText = newComment.value;
+
+        var commentBox = document.querySelector("#comments");
+        var newCommentLine = document.createElement("div");
+        commentBox.appendChild(newCommentLine);
+        newCommentLine.textContent = newCommentText;
+        newCommentLine.setAttribute("class", "comment");
       }
     </script>
 
