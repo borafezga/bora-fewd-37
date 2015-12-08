@@ -115,17 +115,26 @@
 
 
 
-    //Create a section
+
+    //Create the main
+    var main = document.createElement("main");
+    body.appendChild(main);
+
     var section = document.createElement("section");
-    body.appendChild(section)
+    main.appendChild(section)
 
     var heading = document.createElement("h1");
     section.appendChild(heading);
     heading.textContent = "Welcome to Acme Corp";
 
-    var image = document.createElement("img");
-    section.appendChild(image);
-    //image.setAttribute("src", "URL Here");
+    var paragraph1 = document.createElement("p");
+    section.appendChild(paragraph1);
+    paragraph1.textContent = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+
+    var paragraph2 = document.createElement("p");
+    section.appendChild(paragraph2);
+    paragraph2.textContent = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
   </script>
 
   </body>
