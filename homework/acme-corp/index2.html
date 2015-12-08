@@ -81,8 +81,16 @@
     <script type="text/javascript">
     // Creating the header
     var body = document.querySelector("body");
+
     var header = document.createElement("header");
-    body.appendChild(header)
+    body.appendChild(header);
+
+    var logo = document.createElement("img");
+    header.appendChild(logo);
+    logo.setAttribute("src", "./acme-corp-logo.jpg");
+    logo.setAttribute("alt", "ACME Logo");
+    logo.setAttribute("width", "200px");
+    logo.setAttribute("height", "55px");
 
       // Create the nav
       var nav = document.createElement("nav");
@@ -91,6 +99,19 @@
         //Create the list within the nav
         var linkList = document.createElement("ul");
         nav.appendChild(linkList);
+        var link1 = document.createElement("li");
+        linkList.appendChild(link1);
+        var link2 = document.createElement("li");
+        linkList.appendChild(link2);
+
+        var productsLink = document.createElement("a");
+        link1.appendChild(productsLink);
+        productsLink.setAttribute("href", "products.html");
+        productsLink.textContent = "Products";
+
+        var signUpButton = document.createElement("button");
+        link2.appendChild(signUpButton);
+        signUpButton.textContent = "Sign Up";
 
 
 
@@ -104,7 +125,7 @@
 
     var image = document.createElement("img");
     section.appendChild(image);
-    image.setAttribute("src", "URL Here");
+    //image.setAttribute("src", "URL Here");
   </script>
 
   </body>
