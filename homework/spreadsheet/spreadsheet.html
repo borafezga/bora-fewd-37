@@ -57,7 +57,6 @@ button {
 var rowControl = document.querySelector("#add-row");
 rowControl.addEventListener("click", addRow)
 
-
 var table = document.querySelector("tbody");
 
 function addRow(event) {
@@ -76,9 +75,19 @@ function addRow(event) {
 
 
 
-//Adding a new column. Need to know: the total number of <trs>
-//number of columns is the total number of <td> in a <tr>
-//For i in count of trs in table, tr.appendChild(newtd)
-//newTd.setAttribute to make contentEditable
-//
+//Adding a new column
+//Create an event listener for the #add-column button to listen to button click
+var columnControl = document.querySelector("#add-column");
+columnControl.addEventListener("click", addColumn);
+
+function addColumn(event) {
+  event.preventDefault();
+  //To add a new column, we need to append a <td> to each existing <tr> in the table. To do so, we must find the total number of <tr>
+  var rows = document.querySelectorAll("tr");
+  //For i in count of trs in table, tr.appendChild(newtd)
+  for (var i = 0; i < rows.length; i++) {
+    var newCell = document.createElement("td");
+    rows[i].appendChild(newCell);
+  }
+}
 </script>
