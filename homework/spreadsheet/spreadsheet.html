@@ -1,0 +1,84 @@
+<style>
+body {
+  font-family: sans-serif;
+  margin: 2em 4em;
+}
+table {
+  margin-bottom: 1em;
+}
+td {
+  border: 1px solid #ccc;
+  padding: 1em;
+}
+button {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom-width: 2px;
+  border-radius: 5px; font-size: inherit;
+  color: white;
+  background-color: #049cd8;
+  padding: .5em 1em;
+  cursor: pointer;
+}
+</style>
+
+<h1>Spreadsheet</h1>
+
+<table>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td contenteditable>Avand</td>
+      <td contenteditable>Instructor</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td contenteditable>Sandi</td>
+      <td contenteditable>TA</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td contenteditable>Yana</td>
+      <td contenteditable>Student</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td contenteditable>Maks</td>
+      <td contenteditable>Student</td>
+    </tr>
+  </tbody>
+</table>
+
+<button id="add-row">Add a Row</button>
+<button id="add-column">Add a Column</button>
+
+<script>
+//Adding a row
+//Create an event listener for the #add-row button to listen to the button click
+var rowControl = document.querySelector("#add-row");
+rowControl.addEventListener("click", addRow)
+
+
+var table = document.querySelector("tbody");
+
+function addRow(event) {
+  event.preventDefault();
+  // Get the parent and then append a new <tr>
+  var newRow = document.createElement("tr");
+  table.appendChild(newRow);
+  //count the number of columns to know how many <td> are needed inside a <tr>
+  var cells = document.querySelectorAll("tr:first-child td");
+  //attach the necessary number of <td> via a FOR loop
+  for (var i = 0; i < cells.length; i++) {
+    var newTd = document.createElement("td");
+    newRow.appendChild(newTd);
+  }
+}
+
+
+
+//Adding a new column. Need to know: the total number of <trs>
+//number of columns is the total number of <td> in a <tr>
+//For i in count of trs in table, tr.appendChild(newtd)
+//newTd.setAttribute to make contentEditable
+//
+</script>
