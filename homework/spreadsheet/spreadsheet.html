@@ -59,8 +59,11 @@ rowControl.addEventListener("click", addRow)
 
 var table = document.querySelector("tbody");
 
+
 function addRow(event) {
   event.preventDefault();
+
+
   // Get the parent and then append a new <tr>
   var newRow = document.createElement("tr");
   table.appendChild(newRow);
@@ -70,8 +73,13 @@ function addRow(event) {
   for (var i = 0; i < cells.length; i++) {
     var newTd = document.createElement("td");
     newRow.appendChild(newTd);
+  //make contenteditable all tds in a row except for the first one
     if (i > 0) {
       newTd.setAttribute("contenteditable", "true");
+    } else {
+    //automatically add number to the first <td>
+      var allRows = document.querySelectorAll("tr");
+      newTd.textContent = allRows.length
     }
   }
 }
@@ -85,8 +93,10 @@ columnControl.addEventListener("click", addColumn);
 
 function addColumn(event) {
   event.preventDefault();
+
   //To add a new column, we need to append a <td> to each existing <tr> in the table. To do so, we must find the total number of <tr>
   var rows = document.querySelectorAll("tr");
+
   //For i in count of trs in table, tr.appendChild(newtd)
   for (var i = 0; i < rows.length; i++) {
     var newCell = document.createElement("td");
