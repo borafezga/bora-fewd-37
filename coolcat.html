@@ -1,0 +1,80 @@
+<div class="container">
+    <h1>Displaying User Data</h1>
+    <p>Log in with your Spotify account and this demo will display information about you fetched using the Spotify Web API</p>
+    <button class="btn btn-primary" id="btn-login">Login</button>
+    <div id="result"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js">
+
+</script>
+
+<script type="text/javascript">
+
+(function() {
+
+    function login(callback) {
+        var CLIENT_ID = '7a8d1111d43447a7abcacc0d089acf86';
+        var REDIRECT_URI = 'http%3A%2F%2Flocalhost%3A8888%2Fcallback';
+        function getLoginURL(scopes) {
+            return 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID +
+              '&redirect_uri=' + REDIRECT_URI +
+              '&scope=' + scopes.join(' ') +
+              '&response_type=token';
+        }
+
+        var url = getLoginURL([
+            'user-library-read'
+        ]);
+
+        var width = 450,
+            height = 730,
+            left = (screen.width / 2) - (width / 2),
+            top = (screen.height / 2) - (height / 2);
+
+        window.addEventListener("message", function(event) {
+            var hash = JSON.parse(event.data);
+            if (hash.type == 'access_token') {
+                callback(hash.access_token);
+                console.log(access_token);
+            }
+        }, false);
+
+        var w = window.open(url,
+                            'Spotify',
+                            'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
+                           );
+
+    }
+
+    function getUserData(accessToken) {
+        return $.ajax({
+            url: 'https://api.spotify.com/v1/me',
+            headers: {
+               'Authorization': 'Bearer ' + accessToken
+            }
+        });
+    }
+
+  //  var templateSource = document.getElementById('result-template').innerHTML,
+        //template = Handlebars.compile(templateSource),
+        //resultsPlaceholder = document.getElementById('result'),
+      var loginButton = document.getElementById('btn-login');
+
+
+    loginButton.addEventListener('click', function() {
+      //when you click the login button, you activate the login function
+      //Login function takes another function as its argument; the function is getUserDate with the argument accessToken.
+      //getUserData function
+        login(function(accessToken) {
+            getUserData(accessToken)
+                .then(function(response) {
+                    loginButton.style.display = 'none';
+                    resultsPlaceholder.innerHTML = template(response);
+                });
+            });
+    });
+
+})();
+
+</script>
