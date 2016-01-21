@@ -1,80 +1,157 @@
-<div class="container">
-    <h1>Displaying User Data</h1>
-    <p>Log in with your Spotify account and this demo will display information about you fetched using the Spotify Web API</p>
-    <button class="btn btn-primary" id="btn-login">Login</button>
-    <div id="result"></div>
-</div>
+<script src="top50s.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js">
-
 </script>
 
+
+
+<div class="container">
+    <section>
+      <h1>Are You A Cool Cat?</h1>
+      <p>Log in with your Spotify account below</p>
+      <button class="btn btn-primary" id="btn-login">Login to Spotify</button>
+    </section>
+    <section id="pitchfork">
+      <h2>Pitchfork</h2>
+      <button class="btn btn-primary" id="btn-pitchfork">Get Your Cool Score</button>
+      <div id="pitchfork-top">
+      </div>
+      <div id="pitchfork-results"></div>
+    </section>
+    <section id="rollingstone">
+      <h2>RollingStone</h2>
+      <button class="btn btn-primary" id="btn-rollingstone">Get Your Cool Score</button>
+      <div id="rollingstone-results"></div>
+    </section>
+</div>
+
+
 <script type="text/javascript">
+// If your key expires: localStorage.removeItem("access_token")
+var globalAccessToken = localStorage.getItem("access_token");
 
-(function() {
+//LOGGING INTO SPOTIFY, AUTHENTICATING ACCOUNT AND GETTING ACCESS TOKEN
+function login(callback) {
+  if (globalAccessToken != null) {
+    callback();
+    return;
+  }
 
-    function login(callback) {
-        var CLIENT_ID = '7a8d1111d43447a7abcacc0d089acf86';
-        var REDIRECT_URI = 'http%3A%2F%2Fborafezga.github.io%2Fbora-fewd-37%2Fcoolcat.html';
-        function getLoginURL(scopes) {
-            return 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID +
-              '&redirect_uri=' + REDIRECT_URI +
-              '&scope=' + scopes.join(' ') +
-              '&response_type=token';
+    var CLIENT_ID = '7a8d1111d43447a7abcacc0d089acf86';
+    var REDIRECT_URI = encodeURIComponent('http://borafezga.github.io/bora-fewd-37/spotify_proxy.html');
+    function getLoginURL(scopes) {
+        return 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID +
+          '&redirect_uri=' + REDIRECT_URI +
+          '&scope=' + scopes.join(' ') +
+          '&response_type=token';
+    }
+
+    var url = getLoginURL([
+        'user-library-read'
+    ]);
+
+    var width = 450,
+        height = 730,
+        left = (screen.width / 2) - (width / 2),
+        top = (screen.height / 2) - (height / 2);
+
+    window.addEventListener("message", function(event) {
+        var hash = JSON.parse(event.data);
+        if (hash.type == 'access_token') {
+          localStorage.setItem("access_token", hash.access_token);
+          globalAccessToken = hash.access_token;
+          callback();
         }
+    }, false);
 
-        var url = getLoginURL([
-            'user-library-read'
-        ]);
+    var w = window.open(url,
+                        'Spotify',
+                        'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
+                       );
 
-        var width = 450,
-            height = 730,
-            left = (screen.width / 2) - (width / 2),
-            top = (screen.height / 2) - (height / 2);
+}
 
-        window.addEventListener("message", function(event) {
-            var hash = JSON.parse(event.data);
-            if (hash.type == 'access_token') {
-                callback(hash.access_token);
-                console.log(access_token);
-            }
-        }, false);
-
-        var w = window.open(url,
-                            'Spotify',
-                            'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
-                           );
-
-    }
-
-    function getUserData(accessToken) {
-        return $.ajax({
-            url: 'https://api.spotify.com/v1/me',
-            headers: {
-               'Authorization': 'Bearer ' + accessToken
-            }
-        });
-    }
-
-  //  var templateSource = document.getElementById('result-template').innerHTML,
-        //template = Handlebars.compile(templateSource),
-        //resultsPlaceholder = document.getElementById('result'),
-      var loginButton = document.getElementById('btn-login');
-
-
-    loginButton.addEventListener('click', function() {
-      //when you click the login button, you activate the login function
-      //Login function takes another function as its argument; the function is getUserDate with the argument accessToken.
-      //getUserData function
-        login(function(accessToken) {
-            getUserData(accessToken)
-                .then(function(response) {
-                    loginButton.style.display = 'none';
-                    resultsPlaceholder.innerHTML = template(response);
-                });
-            });
+//CHECK USER LIBRARY FOR PITCHFORK TRACKS
+function getPitchforkData(accessToken) {
+    return $.ajax({
+        url: pitchfork,
+        headers: {
+           'Authorization': 'Bearer ' + accessToken
+        }
     });
+}
 
-})();
+//CHECK USER LIBRARY FOR ROLLING STONE TRACKS
+function getRSData(accessToken) {
+    return $.ajax({
+        url: rollingstone,
+        headers: {
+           'Authorization': 'Bearer ' + accessToken
+        }
+    });
+}
+
+function getPitchforkTop(){
+  return $.ajax({
+    url: pitchforkGet,
+  });
+}
+
+//UPON HITTING THE LOGIN FUNCTION
+var loginButton = document.getElementById('btn-login');
+loginButton.addEventListener('click', function() {
+  console.log("Hey! this worked!");
+    login(function() {
+      alert("Thanks! You're logged in!")
+        });
+});
+
+
+//UPON HITTING THE ROLLING STONE BUTTON
+var rsButton = document.querySelector('#btn-rollingstone');
+rsButton.addEventListener('click', function(){
+  getRSData(globalAccessToken)
+    .then(function(rollingstoneResults) {
+      var rollingstoneTracksMatched = 0;
+      for (var i = 0; i < rollingstoneResults.length; i++) {
+        if (rollingstoneResults[i] == true) {
+        rollingstoneTracksMatched = rollingstoneTracksMatched + 1;
+        }
+      }
+      var rollingstoneCoolScore = rollingstoneTracksMatched / 49;
+      document.querySelector("#rollingstone-results").textContent = "According to Rolling Stone, you are " + rollingstoneCoolScore + " cool";
+    });
+  });
+
+
+//UPON HITTING THE PITCHFORK BUTTON
+var pfButton = document.querySelector('#btn-pitchfork');
+pfButton.addEventListener('click', function(){
+  var pfArea = document.querySelector('#pitchfork-top')
+
+  getPitchforkData(globalAccessToken)
+   .then(function(pitchforkResults) {
+     var pitchforkTracksMatched = 0;
+     for (var i = 0; i < pitchforkResults.length; i++) {
+       if (pitchforkResults[i] == true) {
+             pitchforkTracksMatched = pitchforkTracksMatched + 1;
+             }
+          }
+           var pitchforkCoolScore = pitchforkTracksMatched / 48;
+           document.querySelector("#pitchfork-results").textContent = "According to Pitchfork, you are " + pitchforkCoolScore + " cool";
+         });
+
+  getPitchforkTop()
+    .then(function(pitchforkTopResults){
+      for (var t = 1; t < pitchforkTopResults.tracks.length; t++) {
+        var topTrack = document.createElement("p");
+        topTrack.textContent = pitchforkTopResults.tracks[t]["name"] + " by " + pitchforkTopResults.tracks[t]["artists"][0]["name"];
+        pfArea.appendChild(topTrack);
+      }
+
+      console.log(pitchforkTopResults);
+    });
+});
+
 
 </script>
