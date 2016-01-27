@@ -12,7 +12,7 @@
   console.log('initial hash', hash);
 
   var url;
-  if (window.location.hostname.length == 0) {
+  if (window.location.hostname == 'localhost') {
     url = 'http://localhost:8000/';
   } else {
     url = 'http://borafezga.github.io/'
