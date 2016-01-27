@@ -11,12 +11,12 @@
   });
   console.log('initial hash', hash);
 
-  var url;
-  if (window.location.hostname == 'localhost') {
-    url = 'http://localhost:8000/';
-  } else {
-    url = 'http://borafezga.github.io/'
-  }
+  var url = 'http://localhost:8000/';
+  // if (window.location.hostname == 'localhost') {
+  //   url = 'http://localhost:8000/';
+  // } else {
+  //   url = 'http://borafezga.github.io/'
+  // }
 
   if (hash.access_token) {
     window.opener.postMessage(JSON.stringify({
