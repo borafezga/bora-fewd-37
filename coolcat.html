@@ -4,6 +4,39 @@
 </script>
 
 
+<style media="screen">
+.top_track_photo {
+  width: 200px;
+  height: 200px;
+  float: left;
+};
+
+.top_track {
+  width: 200px;
+  height: 280px;
+  float: left;
+  position: absolute;
+}
+
+.top_track_link {
+  position: relative;
+  bottom: 20px;
+}
+
+.publication_section {
+  width: 1200px;
+  display: block;
+}
+
+.publication_section {
+  width: 1200px;
+}
+
+.publication_div {
+  width: 50%;
+}
+
+</style>
 
 <div class="container">
     <section>
@@ -11,14 +44,15 @@
       <p>Log in with your Spotify account below</p>
       <button class="btn btn-primary" id="btn-login">Login to Spotify</button>
     </section>
-    <section id="pitchfork">
+    <section id="pitchfork" class="publication_section">
       <h2>Pitchfork</h2>
       <button class="btn btn-primary" id="btn-pitchfork">Get Your Cool Score</button>
-      <div id="pitchfork-top">
+      <div class="publication_div">
+      <div id="pitchfork-results" class="result_div"></div>
+      <div id="pitchfork-top" class="result_div"></div>
       </div>
-      <div id="pitchfork-results"></div>
     </section>
-    <section id="rollingstone">
+    <section id="rollingstone" class="publication_section">
       <h2>RollingStone</h2>
       <button class="btn btn-primary" id="btn-rollingstone">Get Your Cool Score</button>
       <div id="rollingstone-results"></div>
@@ -91,16 +125,18 @@ function getRSData(accessToken) {
     });
 }
 
+
+//GETS INFORMATION ABOUT PTICHFORK'S TOP TRACKS
 function getPitchforkTop(){
   return $.ajax({
     url: pitchforkGet,
   });
 }
 
+
 //UPON HITTING THE LOGIN FUNCTION
 var loginButton = document.getElementById('btn-login');
 loginButton.addEventListener('click', function() {
-  console.log("Hey! this worked!");
     login(function() {
       alert("Thanks! You're logged in!")
         });
@@ -126,32 +162,60 @@ rsButton.addEventListener('click', function(){
 
 //UPON HITTING THE PITCHFORK BUTTON
 var pfButton = document.querySelector('#btn-pitchfork');
-pfButton.addEventListener('click', function(){
-  var pfArea = document.querySelector('#pitchfork-top')
 
+pfButton.addEventListener('click', function(){
+  var pfArea = document.querySelector('#pitchfork-results')
+
+  //Calculation of cool score
   getPitchforkData(globalAccessToken)
    .then(function(pitchforkResults) {
      var pitchforkTracksMatched = 0;
+
      for (var i = 0; i < pitchforkResults.length; i++) {
        if (pitchforkResults[i] == true) {
              pitchforkTracksMatched = pitchforkTracksMatched + 1;
              }
           }
-           var pitchforkCoolScore = pitchforkTracksMatched / 48;
-           document.querySelector("#pitchfork-results").textContent = "According to Pitchfork, you are " + pitchforkCoolScore + " cool";
-         });
+      var pitchforkCoolScore = pitchforkTracksMatched / 48;
+      var pitchforkCoolPercent = Math.floor(pitchforkCoolScore * 100);
+      var pfResultsParagraph1 = document.createElement("p");
+      pfResultsParagraph1.innerHTML = "According to Pitchfork, you are <br/><span class=coolscore>" + pitchforkCoolPercent + "%</span></br>cool";
+      pfArea.appendChild(pfResultsParagraph1);
+      var pfResultsParagraph2 = document.createElement("p");
+      pfResultsParagraph2.innerHTML = "You have listened to <strong>" + pitchforkTracksMatched + "</strong> of the year's top tracks.";
+      pfArea.appendChild(pfResultsParagraph2);
 
-  getPitchforkTop()
-    .then(function(pitchforkTopResults){
-      for (var t = 1; t < pitchforkTopResults.tracks.length; t++) {
-        var topTrack = document.createElement("p");
-        topTrack.textContent = pitchforkTopResults.tracks[t]["name"] + " by " + pitchforkTopResults.tracks[t]["artists"][0]["name"];
-        pfArea.appendChild(topTrack);
-      }
 
-      console.log(pitchforkTopResults);
+
+      //Mark which tracks were found in the user's library and which weren't. Played = false if the track wasn't found
+      for (var y = 0; y < pitchforkTracks.length; y++) {
+        pitchforkTracks[y]["played"] = pitchforkResults[y];
+      };
+
+      //Collect those tracks in an array
+      var pitchforkUnheardTracks = [];
+      for (var z = 0; z < pitchforkTracks.length; z++) {
+        if (pitchforkTracks[z].played == false) {
+          pitchforkUnheardTracks.push(pitchforkTracks[z]["id"]);
+         }
+       };
+
+      //Create an iframe that plays only those tracks
+      var pfUnheardURL = "https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:" + pitchforkUnheardTracks.join();
+      var pitchforkIframe = document.createElement("iframe");
+      pitchforkIframe.setAttribute("src", pfUnheardURL);
+      pitchforkIframe.setAttribute("frameborder", "0");
+      pitchforkIframe.setAttribute("allowtransparency", "true");
+      pitchforkIframe.setAttribute("height", "720px");
+      pitchforkIframe.setAttribute("width", "640px");
+      document.querySelector("#pitchfork-top").appendChild(pitchforkIframe);
+
+
+      })
+
+
     });
-});
+//});
 
 
 </script>
