@@ -5,6 +5,10 @@
 
 
 <style media="screen">
+body {
+  font-family: Circular, Helvetica, Arial, sans-serif;
+}
+
 .top_track_photo {
   width: 200px;
   height: 200px;
@@ -28,35 +32,174 @@
   display: block;
 }
 
-.publication_section {
-  width: 1200px;
+.publication_div {
+  width: 1400px;
 }
 
-.publication_div {
-  width: 50%;
+.result_div {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.result_div p {
+  display: table-cell;
+  margin: 100px;
+  padding: 20px;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-result {
+  background-color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  text-align: center;
+  padding: 15px 47px;
+  border-radius: 25px;
+  border-color: rgb(221, 85, 72);
+  border: solid 2px;
+  text-decoration: none;
+  color: rgb(221, 85, 72);
+  margin-left: 100px;
+  margin-top: 40px;
+}
+
+#btn-login {
+  background-color: rgb(221, 85, 72);
+  border-bottom-left-radius: 500px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 21px;
+  text-align: center;
+  padding: 15px 47px;
+  border-radius: 25px;
+  text-decoration: none;
+  color: white;
+  margin-left: 100px;
+  margin-top: 40px;
+}
+
+.publication_section {
+  margin-top: 100px;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+}
+
+.main_headline {
+  font-weight: 900;
+  margin-top: 150px;
+  margin-left: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 50px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+}
+
+.subheadline {
+  font-size: 20px;
+  font-weight: 100;
+  display: block;
+  margin-bottom: 85px;
+  margin-left: 100px;
+}
+
+img {
+  margin-left: 60px;
+}
+
+.publication_title {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-left: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 50px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+  padding-bottom: 40px;
+  color: rgb(93, 96, 99);
+}
+
+.login_section {
+  border-bottom: solid 1px;
+  border-color: rgb(214, 215, 217);
+}
+
+.coolscore {
+  font-weight: 600;
+  margin-top: 40px;
+  margin-left: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 50px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+  padding-bottom: 40px;
+  color: rgb(221, 85, 72);
 }
 
 </style>
 
 <div class="container">
-    <section>
-      <h1>Are You A Cool Cat?</h1>
-      <p>Log in with your Spotify account below</p>
-      <button class="btn btn-primary" id="btn-login">Login to Spotify</button>
-    </section>
-    <section id="pitchfork" class="publication_section">
-      <h2>Pitchfork</h2>
-      <button class="btn btn-primary" id="btn-pitchfork">Get Your Cool Score</button>
+    <section class=login_section>
       <div class="publication_div">
-      <div id="pitchfork-results" class="result_div"></div>
-      <div id="pitchfork-top" class="result_div"></div>
+          <div class="result_div">
+            <span class="main_headline">Are You A Cool Cat?</span>
+            <span class=subheadline>Log in with your Spotify account below</span>
+            <a href="" id="btn-login">LOG IN WITH SPOTIFY</a>
+          </div>
+
+          <div class="result_div">
+            <img src="/images/cool_cat.png" alt="Cool Cat" />
+          </div>
       </div>
     </section>
-    <section id="rollingstone" class="publication_section">
-      <h2>RollingStone</h2>
-      <button class="btn btn-primary" id="btn-rollingstone">Get Your Cool Score</button>
-      <div id="rollingstone-results"></div>
+
+
+    <section id="pitchfork" class="publication_section">
+
+      <div class="publication_div">
+        <div class="result_div">
+        <span class=publication_title>How cool are you according to Pitchfork?</span>
+        <a href="" class="btn btn-result" id="btn-pitchfork">GET YOUR COOL SCORE</a>
+        </div>
+        <div class="result_div">
+        </div>
+      </div>
+
+      <div class="publication_div">
+        <div id="pitchfork-results" class="result_div"></div>
+        <div id="pitchfork-top" class="result_div"></div>
+      </div>
+
     </section>
+
+
+    <section id="rollingstone" class="publication_section">
+
+      <div class="publication_div">
+        <div class="result_div">
+        <span class=publication_title>How cool are you according to </br> Rolling Stone?</span>
+        <a href="" class="btn btn-result" id="btn-rollingstone">GET YOUR COOL SCORE</a>
+        </div>
+        <div class="result_div">
+        </div>
+      </div>
+
+      <div class="publication_div">
+        <div id="rollingstone-results" class="result_div"></div>
+        <div id="rollingstone-top" class="result_div"></div>
+      </div>
+
+    </section>
+
 </div>
 
 
@@ -179,10 +322,10 @@ pfButton.addEventListener('click', function(){
       var pitchforkCoolScore = pitchforkTracksMatched / 48;
       var pitchforkCoolPercent = Math.floor(pitchforkCoolScore * 100);
       var pfResultsParagraph1 = document.createElement("p");
-      pfResultsParagraph1.innerHTML = "According to Pitchfork, you are <br/><span class=coolscore>" + pitchforkCoolPercent + "%</span></br>cool";
+      pfResultsParagraph1.innerHTML = "<span class=coolscore>" + pitchforkCoolPercent + "% COOL</span>";
       pfArea.appendChild(pfResultsParagraph1);
       var pfResultsParagraph2 = document.createElement("p");
-      pfResultsParagraph2.innerHTML = "You have listened to <strong>" + pitchforkTracksMatched + "</strong> of the year's top tracks.";
+      pfResultsParagraph2.innerHTML = "You have listened to <span>" + pitchforkTracksMatched + "</span> of the year's top tracks.";
       pfArea.appendChild(pfResultsParagraph2);
 
 
@@ -206,7 +349,7 @@ pfButton.addEventListener('click', function(){
       pitchforkIframe.setAttribute("src", pfUnheardURL);
       pitchforkIframe.setAttribute("frameborder", "0");
       pitchforkIframe.setAttribute("allowtransparency", "true");
-      pitchforkIframe.setAttribute("height", "720px");
+      pitchforkIframe.setAttribute("height", "580px");
       pitchforkIframe.setAttribute("width", "640px");
       document.querySelector("#pitchfork-top").appendChild(pitchforkIframe);
 
