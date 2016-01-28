@@ -144,4 +144,5 @@ img {
 .tracks_listened {
   text-align: center;
   font-size: 25px;
+  display: block;
 }
