@@ -146,7 +146,10 @@ loginButton.addEventListener('click', function() {
 
 //UPON HITTING THE ROLLING STONE BUTTON
 var rsButton = document.querySelector('#btn-rollingstone');
+
 rsButton.addEventListener('click', function(){
+  var rsArea = document.querySelector('#rollingstone-results')
+
   getRSData(globalAccessToken)
     .then(function(rollingstoneResults) {
       var rollingstoneTracksMatched = 0;
@@ -156,7 +159,14 @@ rsButton.addEventListener('click', function(){
         }
       }
       var rollingstoneCoolScore = rollingstoneTracksMatched / 49;
-      document.querySelector("#rollingstone-results").textContent = "According to Rolling Stone, you are " + rollingstoneCoolScore + " cool";
+      var rollingstoneCoolPercent = Math.floor(rollingstoneCoolScore * 100);
+      var rsResultsParagraph1 = document.createElement("span");
+      rsResultsParagraph1.innerHTML = "<span class=coolscore>" + rollingstoneCoolPercent + "% </br>COOL</span>";
+      rsArea.appendChild(rsResultsParagraph1);
+      var rsResultsParagraph2 = document.createElement("span");
+      rsResultsParagraph2.setAttribute("class", "tracks_listened");
+      rsResultsParagraph2.innerHTML = "You have listened to <span>" + rollingstoneTracksMatched + "</span> of the year's top tracks.";
+      rsArea.appendChild(rsResultsParagraph2);
     });
   });
 
