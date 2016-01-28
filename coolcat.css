@@ -1,0 +1,147 @@
+
+body {
+  font-family: Circular, Helvetica, Arial, sans-serif;
+}
+
+.top_track_photo {
+  width: 200px;
+  height: 200px;
+  float: left;
+};
+
+.top_track {
+  width: 200px;
+  height: 280px;
+  float: left;
+  position: absolute;
+}
+
+.top_track_link {
+  position: relative;
+  bottom: 20px;
+}
+
+.publication_section {
+  width: 1200px;
+  display: block;
+}
+
+.publication_div {
+  width: 1400px;
+}
+
+.result_div {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.result_div p {
+  display: table-cell;
+  margin: 100px;
+  padding: 20px;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-result {
+  background-color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 21px;
+  text-align: center;
+  padding: 15px 47px;
+  border-radius: 25px;
+  border-color: rgb(221, 85, 72);
+  border: solid 2px;
+  text-decoration: none;
+  color: rgb(221, 85, 72);
+  margin-left: 100px;
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+#btn-login {
+  background-color: rgb(221, 85, 72);
+  border-bottom-left-radius: 500px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 21px;
+  text-align: center;
+  padding: 15px 47px;
+  border-radius: 25px;
+  text-decoration: none;
+  color: white;
+  margin-left: 100px;
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+.publication_section {
+  margin-top: 100px;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+}
+
+.main_headline {
+  font-weight: 900;
+  margin-top: 150px;
+  margin-left: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 50px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+}
+
+.subheadline {
+  font-size: 20px;
+  font-weight: 100;
+  display: block;
+  margin-bottom: 85px;
+  margin-left: 100px;
+}
+
+img {
+  margin-left: 60px;
+}
+
+.publication_title {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-left: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 50px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+  padding-bottom: 40px;
+  color: rgb(93, 96, 99);
+}
+
+.login_section {
+  border-bottom: solid 1px;
+  border-color: rgb(214, 215, 217);
+}
+
+.coolscore {
+  font-weight: 900;
+  margin-top: 100px;
+  margin-right: auto;
+  margin-bottom: 20px;
+  font-size: 80px;
+  display: block;
+  padding-left: auto;
+  padding-right: auto;
+  padding-bottom: 40px;
+  color: rgb(221, 85, 72);
+  text-align: center;
+}
+
+.tracks_listened {
+  text-align: center;
+  font-size: 25px;
+}
