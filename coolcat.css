@@ -96,19 +96,6 @@ body {
   padding-right: auto;
 }
 
-.year_headline {
-  font-weight: 900;
-  margin-top: 100px;
-  margin-left: 100px;
-  margin-right: auto;
-  margin-bottom: 20px;
-  font-size: 50px;
-  display: block;
-  padding-left: auto;
-  padding-right: auto;
-  color: rgb(221, 85, 72);
-}
-
 .subheadline {
   font-size: 20px;
   font-weight: 100;
