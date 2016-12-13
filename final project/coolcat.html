@@ -1,327 +1,80 @@
-<script src="top50s.js"></script>
+<div class="container">
+    <h1>Displaying User Data</h1>
+    <p>Log in with your Spotify account and this demo will display information about you fetched using the Spotify Web API</p>
+    <button class="btn btn-primary" id="btn-login">Login</button>
+    <div id="result"></div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js">
+
 </script>
 
-<link href="coolcat.css" rel="stylesheet">
-
-<div class="container">
-    <section class=login_section>
-      <div class="publication_div">
-          <div class="result_div">
-            <span class="main_headline">Are You A Cool Cat?</span>
-            <span class=subheadline>Log in with your Spotify account below</span>
-            <span id="btn-login">LOG IN WITH SPOTIFY</span>
-          </div>
-
-          <div class="result_div">
-            <img src="../images/cool_cat.png" alt="Cool Cat" />
-          </div>
-      </div>
-    </section>
-
-
-  <div class="year">
-      <span class="year_headline">2016</span>
-
-      <section id="npr2016" class="publication_section">
-
-        <div class="publication_div">
-          <div class="result_div">
-          <span class=publication_title>How cool are you according to NPR?</span>
-          <span class="btn btn-result" id="btn-npr2016">GET YOUR COOL SCORE</span>
-          </div>
-          <div class="result_div">
-          </div>
-        </div>
-
-        <div class="publication_div">
-          <div id="npr-results-2016" class="result_div"></div>
-          <div id="npr-top-2016" class="result_div"></div>
-        </div>
-
-  </div>
-
-
-<div class="year">
-  <span class="year_headline">2015</span>
-
-    <section id="pitchfork" class="publication_section">
-
-      <div class="publication_div">
-        <div class="result_div">
-        <span class=publication_title>How cool are you according to Pitchfork?</span>
-        <span class="btn btn-result" id="btn-pitchfork">GET YOUR COOL SCORE</span>
-        </div>
-        <div class="result_div">
-        </div>
-      </div>
-
-      <div class="publication_div">
-        <div id="pitchfork-results" class="result_div"></div>
-        <div id="pitchfork-top" class="result_div"></div>
-      </div>
-
-    </section>
-
-
-    <section id="rollingstone" class="publication_section">
-
-      <div class="publication_div">
-        <div class="result_div">
-        <span class=publication_title>How cool are you according to </br> Rolling Stone?</span>
-        <span class="btn btn-result" id="btn-rollingstone">GET YOUR COOL SCORE</span>
-        </div>
-        <div class="result_div">
-        </div>
-      </div>
-
-      <div class="publication_div">
-        <div id="rollingstone-results" class="result_div"></div>
-        <div id="rollingstone-top" class="result_div"></div>
-      </div>
-
-    </section>
-</div>
-</div>
-
-
 <script type="text/javascript">
-// If your key expires: localStorage.removeItem("access_token")
-var globalAccessToken = localStorage.getItem("access_token");
 
-//LOGGING INTO SPOTIFY, AUTHENTICATING ACCOUNT AND GETTING ACCESS TOKEN
-function login(callback) {
-  if (globalAccessToken != null) {
-    callback();
-    return;
-  }
+(function() {
 
-    var CLIENT_ID = '7a8d1111d43447a7abcacc0d089acf86';
-    var REDIRECT_URI = encodeURIComponent('http://borafezga.github.io/bora-fewd-37/spotify_proxy.html');
-    function getLoginURL(scopes) {
-        return 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID +
-          '&redirect_uri=' + REDIRECT_URI +
-          '&scope=' + scopes.join(' ') +
-          '&response_type=token';
+    function login(callback) {
+        var CLIENT_ID = '7a8d1111d43447a7abcacc0d089acf86';
+        var REDIRECT_URI = 'http://localhost:8888/callback';
+        function getLoginURL(scopes) {
+            return 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID +
+              '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
+              '&scope=' + encodeURIComponent(scopes.join(' ')) +
+              '&response_type=token';
+        }
+
+        var url = getLoginURL([
+            'user-library-read'
+        ]);
+
+        var width = 450,
+            height = 730,
+            left = (screen.width / 2) - (width / 2),
+            top = (screen.height / 2) - (height / 2);
+
+        window.addEventListener("message", function(event) {
+            var hash = JSON.parse(event.data);
+            if (hash.type == 'access_token') {
+                callback(hash.access_token);
+                console.log(access_token);
+            }
+        }, false);
+
+        var w = window.open(url,
+                            'Spotify',
+                            'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
+                           );
+
     }
 
-    var url = getLoginURL([
-        'user-library-read'
-    ]);
-
-    var width = 450,
-        height = 730,
-        left = (screen.width / 2) - (width / 2),
-        top = (screen.height / 2) - (height / 2);
-
-    window.addEventListener("message", function(event) {
-        var hash = JSON.parse(event.data);
-        if (hash.type == 'access_token') {
-          localStorage.setItem("access_token", hash.access_token);
-          globalAccessToken = hash.access_token;
-          callback();
-        }
-    }, false);
-
-    var w = window.open(url,
-                        'Spotify',
-                        'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
-                       );
-
-}
-
-//2016
-//CHECK USER LIBRARY FOR NPR TRACKS
-function getNPR2016Data(accessToken) {
-    return $.ajax({
-        url: npr2016,
-        headers: {
-           'Authorization': 'Bearer ' + accessToken
-        }
-    });
-}
-
-//UPON HITTING THE NPR2016 BUTTON
-var npr2016Button = document.querySelector('#btn-npr2016');
-
-npr2016Button.addEventListener('click', function(){
-  var npr2016Area = document.querySelector('#npr-results-2016')
-
-  //Calculation of cool score
-  getNPR2016Data(globalAccessToken)
-   .then(function(npr2016Results) {
-     var npr2016TracksMatched = 0;
-
-     for (var i = 0; i < npr2016Results.length; i++) {
-       if (npr2016Results[i] == true) {
-             npr2016TracksMatched = npr2016TracksMatched + 1;
-             }
-          }
-      var npr2016CoolScore = npr2016TracksMatched / 97;
-      var npr2016CoolPercent = Math.floor(npr2016CoolScore * 100);
-      var npr2016ResultsParagraph1 = document.createElement("span");
-      npr2016ResultsParagraph1.innerHTML = "<span class=coolscore>" + npr2016CoolPercent + "% </br>COOL</span>";
-      npr2016Area.appendChild(pfResultsParagraph1);
-      var npr2016ResultsParagraph2 = document.createElement("span");
-      npr2016ResultsParagraph2.setAttribute("class", "tracks_listened");
-      npr2016ResultsParagraph2.innerHTML = "You have listened to <span>" + npr2016TracksMatched + "</span> of the year's top tracks.";
-      npr2016Area.appendChild(npr2016ResultsParagraph2);
-
-
-
-      //Mark which tracks were found in the user's library and which weren't. Played = false if the track wasn't found
-      for (var y = 0; y < pitchforkTracks.length; y++) {
-        npr2016Tracks[y]["played"] = npr2016Results[y];
-      };
-
-      //Collect those tracks in an array
-      var npr2016UnheardTracks = [];
-      for (var z = 0; z < npr2016Tracks.length; z++) {
-        if (npr2016Tracks[z].played == false) {
-          npr2016UnheardTracks.push(npr2016Tracks[z]["id"]);
-         }
-       };
-
-      //Create an iframe that plays only those tracks
-      var npr2016UnheardURL = "https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:" + npr2016UnheardTracks.join();
-      var npr2016Iframe = document.createElement("iframe");
-      npr2016Iframe.setAttribute("src", npr2016UnheardURL);
-      npr2016Iframe.setAttribute("frameborder", "0");
-      npr2016Iframe.setAttribute("allowtransparency", "true");
-      npr2016Iframe.setAttribute("height", "580px");
-      npr2016Iframe.setAttribute("width", "640px");
-      document.querySelector("#npr-top-2016").appendChild(npr2016Iframe);
-
-
-      })
-
-
-    });
-
-//2015
-//CHECK USER LIBRARY FOR PITCHFORK TRACKS
-function getPitchforkData(accessToken) {
-    return $.ajax({
-        url: pitchfork,
-        headers: {
-           'Authorization': 'Bearer ' + accessToken
-        }
-    });
-}
-
-//CHECK USER LIBRARY FOR ROLLING STONE TRACKS
-function getRSData(accessToken) {
-    return $.ajax({
-        url: rollingstone,
-        headers: {
-           'Authorization': 'Bearer ' + accessToken
-        }
-    });
-}
-
-
-//GETS INFORMATION ABOUT PTICHFORK'S TOP TRACKS
-function getPitchforkTop(){
-  return $.ajax({
-    url: pitchforkGet,
-  });
-}
-
-
-//UPON HITTING THE LOGIN FUNCTION
-var loginButton = document.getElementById('btn-login');
-loginButton.addEventListener('click', function() {
-    login(function() {
-      alert("Thanks! You're logged in!")
+    function getUserData(accessToken) {
+        return $.ajax({
+            url: 'https://api.spotify.com/v1/me',
+            headers: {
+               'Authorization': 'Bearer ' + accessToken
+            }
         });
-});
+    }
+
+  //  var templateSource = document.getElementById('result-template').innerHTML,
+        //template = Handlebars.compile(templateSource),
+        //resultsPlaceholder = document.getElementById('result'),
+      var loginButton = document.getElementById('btn-login');
 
 
-//UPON HITTING THE ROLLING STONE BUTTON
-var rsButton = document.querySelector('#btn-rollingstone');
-
-rsButton.addEventListener('click', function(){
-  var rsArea = document.querySelector('#rollingstone-results')
-
-  getRSData(globalAccessToken)
-    .then(function(rollingstoneResults) {
-      var rollingstoneTracksMatched = 0;
-      for (var i = 0; i < rollingstoneResults.length; i++) {
-        if (rollingstoneResults[i] == true) {
-        rollingstoneTracksMatched = rollingstoneTracksMatched + 1;
-        }
-      }
-      var rollingstoneCoolScore = rollingstoneTracksMatched / 49;
-      var rollingstoneCoolPercent = Math.floor(rollingstoneCoolScore * 100);
-      var rsResultsParagraph1 = document.createElement("span");
-      rsResultsParagraph1.innerHTML = "<span class=coolscore>" + rollingstoneCoolPercent + "% </br>COOL</span>";
-      rsArea.appendChild(rsResultsParagraph1);
-      var rsResultsParagraph2 = document.createElement("span");
-      rsResultsParagraph2.setAttribute("class", "tracks_listened");
-      rsResultsParagraph2.innerHTML = "You have listened to <span>" + rollingstoneTracksMatched + "</span> of the year's top tracks.";
-      rsArea.appendChild(rsResultsParagraph2);
+    loginButton.addEventListener('click', function() {
+      //when you click the login button, you activate the login function
+      //Login function takes another function as its argument; the function is getUserDate with the argument accessToken.
+      //getUserData function
+        login(function(accessToken) {
+            getUserData(accessToken)
+                .then(function(response) {
+                    loginButton.style.display = 'none';
+                    resultsPlaceholder.innerHTML = template(response);
+                });
+            });
     });
-  });
 
-
-//UPON HITTING THE PITCHFORK BUTTON
-var pfButton = document.querySelector('#btn-pitchfork');
-
-pfButton.addEventListener('click', function(){
-  var pfArea = document.querySelector('#pitchfork-results')
-
-  //Calculation of cool score
-  getPitchforkData(globalAccessToken)
-   .then(function(pitchforkResults) {
-     var pitchforkTracksMatched = 0;
-
-     for (var i = 0; i < pitchforkResults.length; i++) {
-       if (pitchforkResults[i] == true) {
-             pitchforkTracksMatched = pitchforkTracksMatched + 1;
-             }
-          }
-      var pitchforkCoolScore = pitchforkTracksMatched / 48;
-      var pitchforkCoolPercent = Math.floor(pitchforkCoolScore * 100);
-      var pfResultsParagraph1 = document.createElement("span");
-      pfResultsParagraph1.innerHTML = "<span class=coolscore>" + pitchforkCoolPercent + "% </br>COOL</span>";
-      pfArea.appendChild(pfResultsParagraph1);
-      var pfResultsParagraph2 = document.createElement("span");
-      pfResultsParagraph2.setAttribute("class", "tracks_listened");
-      pfResultsParagraph2.innerHTML = "You have listened to <span>" + pitchforkTracksMatched + "</span> of the year's top tracks.";
-      pfArea.appendChild(pfResultsParagraph2);
-
-
-
-      //Mark which tracks were found in the user's library and which weren't. Played = false if the track wasn't found
-      for (var y = 0; y < pitchforkTracks.length; y++) {
-        pitchforkTracks[y]["played"] = pitchforkResults[y];
-      };
-
-      //Collect those tracks in an array
-      var pitchforkUnheardTracks = [];
-      for (var z = 0; z < pitchforkTracks.length; z++) {
-        if (pitchforkTracks[z].played == false) {
-          pitchforkUnheardTracks.push(pitchforkTracks[z]["id"]);
-         }
-       };
-
-      //Create an iframe that plays only those tracks
-      var pfUnheardURL = "https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:" + pitchforkUnheardTracks.join();
-      var pitchforkIframe = document.createElement("iframe");
-      pitchforkIframe.setAttribute("src", pfUnheardURL);
-      pitchforkIframe.setAttribute("frameborder", "0");
-      pitchforkIframe.setAttribute("allowtransparency", "true");
-      pitchforkIframe.setAttribute("height", "580px");
-      pitchforkIframe.setAttribute("width", "640px");
-      document.querySelector("#pitchfork-top").appendChild(pitchforkIframe);
-
-
-      })
-
-
-    });
-//});
-
+})();
 
 </script>
